@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  analyticservice.api:
+    image: ${DOCKER_REGISTRY-}analyticserviceapi
+    build:
+      context: .
+      dockerfile: AnalyticService.API/Dockerfile
