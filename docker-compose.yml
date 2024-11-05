@@ -9,6 +9,7 @@ services:
     container_name: "analytic-service"
     networks:
       - cards-network
+    # В целом даже порты прокидывать не надо. Так как все через бридж будет работать. 
     ports:
         - "5003:8080"
         - "5004:8081"
