@@ -5,17 +5,17 @@ option csharp_namespace = "AnalyticService.API";
 package greet;
 
 // The greeting service definition.
-service Greeter {
+service Analytic {
   // Sends a greeting
-  rpc SayHello (HelloRequest) returns (HelloReply);
+  rpc SendStatisic (HelloRequest) returns (Empty);
 }
 
 // The request message containing the user's name.
-message HelloRequest {
+message StatisicModel {
   string name = 1;
 }
 
 // The response message containing the greetings.
-message HelloReply {
-  string message = 1;
+message Empty {
+
 }
