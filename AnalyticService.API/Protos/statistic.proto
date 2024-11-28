@@ -10,20 +10,21 @@ package statistic;
 
 
 service Statistic {
-    rpc SetStatistic (StatisticRequest) returns (StatisticResponse);
+    rpc SaveStatistic (StatisticRequest) returns (StatisticResponse);
     rpc GetYearStatisic (YearStatisticRequest) returns (YearStatisticResponse);
 }
 
-// SetStatistic
+// SaveStatistic
 message StatisticRequest {
     int32 moduleId = 1;
     int32 userId = 2;
     repeated StatisticElements elements = 3;
+    google.protobuf.Timestamp completedAt = 4;
 }
 
 message StatisticElements{
     int32 elementId = 1;
-    bool status = 2;
+    bool answer = 2;
 }
 
 message StatisticResponse {
