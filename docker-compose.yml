@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.5'
 
 services:
   analyticservice.api:
@@ -6,3 +6,15 @@ services:
     build:
       context: .
       dockerfile: AnalyticService.API/Dockerfile
+    container_name: "analytic-service"
+    networks:
+      - cards-network
+    # В целом даже порты прокидывать не надо. Так как все через бридж будет работать. 
+    ports:
+        - "5003:8080"
+        - "5004:8081"
+
+
+networks:
+  cards-network:
+    external: true

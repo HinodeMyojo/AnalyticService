@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+// Пространство имен
+option csharp_namespace = "StatisticService.API";
+
+import "google/protobuf/timestamp.proto";
+
+// Название проекта
+package statistic;
+
+
+service Statistic {
+    rpc SetStatistic (StatisticRequest) returns (StatisticResponse);
+    rpc GetYearStatisic (YearStatisticRequest) returns (YearStatisticResponse);
+}
+
+// SetStatistic
+message StatisticRequest {
+    int32 moduleId = 1;
+    int32 userId = 2;
+    repeated StatisticElements elements = 3;
+}
+
+message StatisticElements{
+    int32 elementId = 1;
+    bool status = 2;
+}
+
+message StatisticResponse {
+    int32 percentSuccess = 1;
+    int32 numberOfAttempts = 2;
+}
+
+
+// GetYearStatisic
+message YearStatisticRequest{
+    int32 userId = 1;
+    int32 year = 2;
+}
+
+message YearStatisticResponse{
+    int32 year = 1;
+    repeated int32 colspan = 2;
+    repeated YearStatisticRow Data = 3; // Массив массивов
+}
+
+message YearStatisticRow {
+    repeated double values = 1;
+}
+
+message YearStatisticModel{
+    google.protobuf.Timestamp date = 1;
+    int32 value = 2;
+}
+
+
