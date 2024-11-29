@@ -10,7 +10,9 @@ namespace StatisticService.API.Services
         public override async Task<StatisticResponse> SaveStatistic(StatisticRequest request, ServerCallContext context)
         {
 
-            return base.SaveStatistic(request, context);
+            StatisticResponse result = await _service.SaveStatistic(request);
+
+            return result;
         }
 
         public override Task<YearStatisticResponse> GetYearStatisic(YearStatisticRequest request, ServerCallContext context)

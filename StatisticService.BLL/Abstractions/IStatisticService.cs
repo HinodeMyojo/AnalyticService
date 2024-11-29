@@ -2,5 +2,6 @@
 {
     public interface IStatisticService
     {
+        Task<StatisticResponse> SaveStatistic(StatisticRequest request);
     }
 }
