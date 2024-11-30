@@ -46,7 +46,7 @@ message YearStatisticResponse{
 }
 
 message YearStatisticRow {
-    repeated double values = 1;
+    repeated YearStatisticModel values = 1;
 }
 
 message YearStatisticModel{

@@ -1,5 +1,7 @@
-﻿using Grpc.Core;
+﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using StatisticService.BLL.Abstractions;
+using StatisticService.BLL.Dto;
 
 namespace StatisticService.API.Services
 {
@@ -12,7 +14,7 @@ namespace StatisticService.API.Services
             var result = await _service.SaveStatisticAsync(
                 moduleId: request.ModuleId,
                 userId: request.UserId,
-                elements: request.Elements.Select(e => new StatisticElementDto
+                elements: request.Elements.Select(e => new ElementStatisticDto
                 {
                     ElementId = e.ElementId,
                     Answer = e.Answer
@@ -27,21 +29,33 @@ namespace StatisticService.API.Services
             };
         }
 
-        public override async Task<YearStatisticResponse> GetYearStatistic(YearStatisticRequest request, ServerCallContext context)
+        public override async Task<YearStatisticResponse> GetYearStatisic(YearStatisticRequest request, ServerCallContext context)
         {
-            var result = await _service.GetYearStatisticAsync(request.UserId, request.Year);
+            YearStatisticDto result = await _service.GetYearStatisticAsync(request.UserId, request.Year);
 
-            var response = new YearStatisticResponse
+            YearStatisticResponse response = new YearStatisticResponse
             {
                 Year = result.Year,
-                Colspan = { result.Colspan },
-                Data = {
-                result.Data.Select(row => new YearStatisticRow
-                {
-                    Values = { row.Values }
-                })
-            }
+                Colspan = { result.Colspan }
             };
+
+            foreach (YearStatisticData[] row in result.Data)
+            {
+                // Создаём новую строку YearStatisticRow
+                YearStatisticRow statisticRow = new();
+
+                foreach (YearStatisticData item in row)
+                {
+                    // Добавляем каждую модель в строку
+                    statisticRow.Values.Add(new YearStatisticModel
+                    {
+                        Date = item.Date.ToTimestamp(),
+                        Value = item.Value
+                    });
+                }
+
+                response.Data.Add(statisticRow);
+            }
 
             return response;
         }
