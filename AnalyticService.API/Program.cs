@@ -10,6 +10,6 @@ builder.Services.AddTransient<IStatisticService, StatisticService.BLL.Services.S
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.MapGrpcService<StatisticService.API.Services.StatisticGrpcService>();
+app.MapGrpcService<StatisticService.API.Services.StatisticService>();
 
 app.Run();
