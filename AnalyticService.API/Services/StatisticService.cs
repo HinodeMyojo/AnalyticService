@@ -1,26 +1,27 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
 using StatisticService.BLL.Abstractions;
 using StatisticService.BLL.Dto;
 
 namespace StatisticService.API.Services
 {
+    //[Authorize]
     public class StatisticService : Statistic.StatisticBase
     {
         private readonly IStatisticService _service;
 
+        public StatisticService(IStatisticService service)
+        {
+            _service = service;
+        }
+
         public override async Task<StatisticResponse> SaveStatistic(StatisticRequest request, ServerCallContext context)
         {
-            var result = await _service.SaveStatisticAsync(
-                moduleId: request.ModuleId,
-                userId: request.UserId,
-                elements: request.Elements.Select(e => new ElementStatisticDto
-                {
-                    ElementId = e.ElementId,
-                    Answer = e.Answer
-                }),
-                completedAt: request.CompletedAt.ToDateTime()
-            );
+            AssertStatistic(request, context);
+
+            var model = MapToRequestStatisticDto(request);
+            var result = await _service.SaveStatisticAsync(model);
 
             return new StatisticResponse
             {
@@ -31,33 +32,48 @@ namespace StatisticService.API.Services
 
         public override async Task<YearStatisticResponse> GetYearStatisic(YearStatisticRequest request, ServerCallContext context)
         {
-            YearStatisticDto result = await _service.GetYearStatisticAsync(request.UserId, request.Year);
+            var result = await _service.GetYearStatisticAsync(request.UserId, request.Year);
 
-            YearStatisticResponse response = new YearStatisticResponse
+            return new YearStatisticResponse
             {
                 Year = result.Year,
-                Colspan = { result.Colspan }
+                Colspan = { result.Colspan },
+                Data = { MapToYearStatisticRows(result.Data) }
+            };
+        }
+
+        private void AssertStatistic(StatisticRequest request, ServerCallContext context)
+        {
+            
+        }
+
+
+        /// <summary>
+        /// Вспомогательный метод по мапингу в dto
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        private static RequestStatisticDto MapToRequestStatisticDto(StatisticRequest request) =>
+            new()
+            {
+                CompletedAt = request.CompletedAt.ToDateTime(),
+                Elements = request.Elements.Select(x => new RequestElementDto
+                {
+                    Answer = x.Answer,
+                    ElementId = x.ElementId,
+                }).ToList(),
+                ModuleId = request.ModuleId,
+                UserId = request.UserId
             };
 
-            foreach (YearStatisticData[] row in result.Data)
+        private static IEnumerable<YearStatisticRow> MapToYearStatisticRows(ResponseYearStatisticData[][] data) =>
+            data.Select(row => new YearStatisticRow
             {
-                // Создаём новую строку YearStatisticRow
-                YearStatisticRow statisticRow = new();
-
-                foreach (YearStatisticData item in row)
+                Values = { row.Select(item => new YearStatisticModel
                 {
-                    // Добавляем каждую модель в строку
-                    statisticRow.Values.Add(new YearStatisticModel
-                    {
-                        Date = item.Date.ToTimestamp(),
-                        Value = item.Value
-                    });
-                }
-
-                response.Data.Add(statisticRow);
-            }
-
-            return response;
-        }
+                    Date = item.Date.ToTimestamp(),
+                    Value = item.Value
+                }) }
+            });
     }
 }

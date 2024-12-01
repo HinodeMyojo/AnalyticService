@@ -8,12 +8,12 @@ namespace StatisticService.BLL.Services
     {
         private readonly IStatisticRepository _repository;
 
-        public Task<YearStatisticDto> GetYearStatisticAsync(int userId, int year)
+        public Task<ResponseYearStatisticDto> GetYearStatisticAsync(int userId, int year)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ResponseStatisticModel> SaveStatisticAsync(int moduleId, int userId, object elements, DateTime completedAt)
+        public Task<ResponseStatisticDto> SaveStatisticAsync(RequestStatisticDto model)
         {
             throw new NotImplementedException();
         }
