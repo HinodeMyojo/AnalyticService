@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StatisticService.API", "AnalyticService.API\StatisticService.API.csproj", "{9F623086-21B6-4F04-9FF5-212EEC670F45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StatisticService.BLL", "StatisticService.BLL\StatisticService.BLL.csproj", "{5F5B0AB0-E0C0-4FF1-99E9-1A10218EC5B4}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{8DC8817B-241B-4B25-842A-A5CCCFE402C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StatisticService.DAL", "StatisticSerivce.DAL\StatisticService.DAL.csproj", "{B59FCB0D-33C4-4330-82C5-E7A6FB4192F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatisticService.BLL", "StatisticService.BLL\StatisticService.BLL.csproj", "{5F5B0AB0-E0C0-4FF1-99E9-1A10218EC5B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StatisticService.API", "StatisticService.API\StatisticService.API.csproj", "{1E0ED713-8CDB-4341-BF99-57D51CB794DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatisticService.DAL", "StatisticSerivce.DAL\StatisticService.DAL.csproj", "{B59FCB0D-33C4-4330-82C5-E7A6FB4192F8}"
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{641A1408-01D5-485F-AD5F-B81F43D458C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,14 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9F623086-21B6-4F04-9FF5-212EEC670F45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9F623086-21B6-4F04-9FF5-212EEC670F45}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9F623086-21B6-4F04-9FF5-212EEC670F45}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9F623086-21B6-4F04-9FF5-212EEC670F45}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8DC8817B-241B-4B25-842A-A5CCCFE402C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8DC8817B-241B-4B25-842A-A5CCCFE402C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8DC8817B-241B-4B25-842A-A5CCCFE402C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8DC8817B-241B-4B25-842A-A5CCCFE402C5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5F5B0AB0-E0C0-4FF1-99E9-1A10218EC5B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5F5B0AB0-E0C0-4FF1-99E9-1A10218EC5B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F5B0AB0-E0C0-4FF1-99E9-1A10218EC5B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +25,14 @@ Global
 		{B59FCB0D-33C4-4330-82C5-E7A6FB4192F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B59FCB0D-33C4-4330-82C5-E7A6FB4192F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B59FCB0D-33C4-4330-82C5-E7A6FB4192F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E0ED713-8CDB-4341-BF99-57D51CB794DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E0ED713-8CDB-4341-BF99-57D51CB794DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E0ED713-8CDB-4341-BF99-57D51CB794DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E0ED713-8CDB-4341-BF99-57D51CB794DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{641A1408-01D5-485F-AD5F-B81F43D458C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{641A1408-01D5-485F-AD5F-B81F43D458C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{641A1408-01D5-485F-AD5F-B81F43D458C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{641A1408-01D5-485F-AD5F-B81F43D458C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

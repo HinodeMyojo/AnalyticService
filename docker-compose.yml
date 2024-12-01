@@ -1,20 +1,17 @@
 version: '3.5'
 
 services:
-  analyticservice.api:
-    image: ${DOCKER_REGISTRY-}analyticserviceapi
+  statisticservice.api:
+    image: ${DOCKER_REGISTRY-}statisticserviceapi
     build:
       context: .
-      dockerfile: AnalyticService.API/Dockerfile
-    container_name: "analytic-service"
+      dockerfile: StatisticService.API/Dockerfile
     networks:
-      - cards-network
+        - cards-network
     # В целом даже порты прокидывать не надо. Так как все через бридж будет работать. 
     ports:
         - "5003:8080"
         - "5004:8081"
-
-
 networks:
   cards-network:
     external: true
