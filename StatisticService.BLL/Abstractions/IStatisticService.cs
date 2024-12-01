@@ -5,7 +5,7 @@ namespace StatisticService.BLL.Abstractions
 {
     public interface IStatisticService
     {
-        Task<YearStatisticDto> GetYearStatisticAsync(int userId, int year);
-        Task<ResponseStatisticModel> SaveStatisticAsync(RequestStatisticDto model);
+        Task<ResponseYearStatisticDto> GetYearStatisticAsync(int userId, int year);
+        Task<ResponseStatisticDto> SaveStatisticAsync(RequestStatisticDto model);
     }
 }

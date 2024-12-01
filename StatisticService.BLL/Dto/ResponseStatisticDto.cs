@@ -1,6 +1,6 @@
 ﻿namespace StatisticService.BLL.Dto
 {
-    public class ResponseStatisticModel
+    public class ResponseStatisticDto
     {
         public int PercentSuccess {  get; set; }
         public int NumberOfAttempts {  get; set; }
