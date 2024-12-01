@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using StatisticService.DAL.Entity;
+using StatisticService.BLL.Entity;
 
 namespace StatisticService.DAL
 {

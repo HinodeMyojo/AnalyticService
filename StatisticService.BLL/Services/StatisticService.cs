@@ -1,5 +1,6 @@
 ﻿using StatisticService.BLL.Abstractions;
 using StatisticService.BLL.Dto;
+using StatisticService.BLL.Entity;
 using StatisticService.DAL.Repository;
 
 namespace StatisticService.BLL.Services
@@ -13,9 +14,21 @@ namespace StatisticService.BLL.Services
             throw new NotImplementedException();
         }
 
-        public Task<ResponseStatisticDto> SaveStatisticAsync(RequestStatisticDto model)
+        public async Task<ResponseStatisticDto> SaveStatisticAsync(RequestStatisticDto model)
         {
-            throw new NotImplementedException();
+
+            int attemptCount = await FindAttemptCountModuleByUser(model.ModuleId, model.UserId);
+
+            StatisticEntity entity = new()
+            {
+                AnsweredAt = model.CompletedAt,
+                AttemptCount = 
+            }
+        }
+
+        private async static Task<int> FindAttemptCountModuleByUser(int moduleId, int userId)
+        {
+            
         }
     }
 }

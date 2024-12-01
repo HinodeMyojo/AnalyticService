@@ -1,4 +1,4 @@
-﻿namespace StatisticService.DAL.Entity
+﻿namespace StatisticService.BLL.Entity
 {
     public class ElementStatisticEntity
     {
