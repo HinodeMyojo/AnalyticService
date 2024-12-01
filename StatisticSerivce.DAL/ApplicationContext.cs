@@ -8,11 +8,15 @@ namespace StatisticService.DAL
     {
         private readonly IConfiguration _configuration;
 
+        public ApplicationContext()
+        {
+        }
+
         public ApplicationContext(DbContextOptions options, IConfiguration configuration) : base(options)
         {
             _configuration = configuration;
         }
-
+        
         public DbSet<StatisticEntity> StatisticEntities { get; set; }
         public DbSet<ElementStatisticEntity> ElementStatisticEntities { get; set; }
 

@@ -8,6 +8,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StatisticService.DAL", "StatisticSerivce.DAL\StatisticService.DAL.csproj", "{B59FCB0D-33C4-4330-82C5-E7A6FB4192F8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StatisticService.API", "StatisticService.API\StatisticService.API.csproj", "{1E0ED713-8CDB-4341-BF99-57D51CB794DB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B59FCB0D-33C4-4330-82C5-E7A6FB4192F8} = {B59FCB0D-33C4-4330-82C5-E7A6FB4192F8}
+	EndProjectSection
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{641A1408-01D5-485F-AD5F-B81F43D458C2}"
 EndProject
