@@ -1,5 +1,6 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using StatisticService.API.Infrastructure;
 using StatisticService.BLL.Abstractions;
 using StatisticService.BLL.Dto;
 
@@ -38,16 +39,26 @@ namespace StatisticService.API.Services
         public override async Task<StatisticResponse> SaveStatistic(StatisticRequest request, ServerCallContext context)
         {
             // Проверяем входящие данные
-            AssertRequestStatistic(request);
+            Validator.AssertRequestStatistic(request);
 
             // Маппим в дто для дальнейшенй обработки в слоях
             RequestStatisticDto model = MapToRequestStatisticDto(request);
-            var result = await _service.SaveStatisticAsync(model);
+
+            int result = await _service.SaveStatisticAsync(model);
 
             return new StatisticResponse
             {
-                PercentSuccess = result.PercentSuccess,
-                NumberOfAttempts = result.NumberOfAttempts
+                Id  = result,
+            };
+        }
+
+        public override async Task<GetStatisticByIdResponse> GetStatisticById(GetStatisticByIdRequest request, ServerCallContext context)
+        {
+            ResponseStatisticDto result = await _service.GetStatisticById(request.Id);
+            return new GetStatisticByIdResponse
+            {
+                NumberOfAttempts = 1,
+                PercentSuccess = 1
             };
         }
 
@@ -65,9 +76,9 @@ namespace StatisticService.API.Services
         public override async Task<YearStatisticResponse> GetYearStatisic(YearStatisticRequest request, ServerCallContext context)
         {
             // Проверяем входящие данные
-            AssertRequestYearStatistic(request);
+            Validator.AssertRequestYearStatistic(request);
 
-            var result = await _service.GetYearStatisticAsync(request.UserId, request.Year);
+            ResponseYearStatisticDto result = await _service.GetYearStatisticAsync(request.UserId, request.Year);
 
             return new YearStatisticResponse
             {
@@ -75,37 +86,6 @@ namespace StatisticService.API.Services
                 Colspan = { result.Colspan }
             };
         }
-
-        /// <summary>
-        /// Проверочный метод
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="context"></param>
-        /// <exception cref="RpcException"></exception>
-        private static void AssertRequestStatistic(StatisticRequest request)
-        {
-            if (request.ModuleId == 0 || request.UserId == 0)
-            {
-                throw new RpcException(
-                    new Status(StatusCode.InvalidArgument, "Id пользователя и/или Id модуля не должны равняться нулю!"));
-            }
-        }
-
-        /// <summary>
-        /// Проверочный метод для GetYear
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="context"></param>
-        /// <exception cref="RpcException"></exception>
-        private static void AssertRequestYearStatistic(YearStatisticRequest request)
-        {
-            if (request.UserId == 0 || request.Year == 0)
-            {
-                throw new RpcException(
-                    new Status(StatusCode.InvalidArgument, "Id пользователя и/или год не должны равняться нулю!"));
-            }
-        }
-
 
         /// <summary>
         /// Вспомогательный метод по мапингу в dto

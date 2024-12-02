@@ -14,6 +14,8 @@ service Statistic {
     rpc Ping(PingRequest) returns (PingResponse); 
     // Сохранение статистики
     rpc SaveStatistic (StatisticRequest) returns (StatisticResponse);
+    // Получение статистики по Id
+    rpc GetStatisticById (GetStatisticByIdRequest) returns (GetStatisticByIdResponse);
     // Получение списка доступных годов для статистики
     rpc GetAwailableYears(GetAwailableYearsRequest) returns(GetAwailableYearsResponse);
     // Получение годовой статистики
@@ -40,9 +42,19 @@ message StatisticElements{
 }
 
 message StatisticResponse {
+    int32 id = 1;
+}
+
+// GetStatisticById
+message GetStatisticByIdRequest{
+    int32 id = 1;
+}
+message GetStatisticByIdResponse{
     int32 percentSuccess = 1;
     int32 numberOfAttempts = 2;
+    google.protobuf.Timestamp completedAt = 3;
 }
+
 
 // GetAwailableYears
 message GetAwailableYearsRequest{
