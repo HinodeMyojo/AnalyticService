@@ -10,8 +10,22 @@ package statistic;
 
 
 service Statistic {
+    // Тест соединения
+    rpc Ping(PingRequest) returns (PingResponse); 
+    // Сохранение статистики
     rpc SaveStatistic (StatisticRequest) returns (StatisticResponse);
+    // Получение статистики по Id
+    rpc GetStatisticById (GetStatisticByIdRequest) returns (GetStatisticByIdResponse);
+    // Получение списка доступных годов для статистики
+    rpc GetAwailableYears(GetAwailableYearsRequest) returns(GetAwailableYearsResponse);
+    // Получение годовой статистики
     rpc GetYearStatisic (YearStatisticRequest) returns (YearStatisticResponse);
+}
+
+// Ping
+message PingRequest{}
+message PingResponse{
+    string message = 1;
 }
 
 // SaveStatistic
@@ -28,8 +42,27 @@ message StatisticElements{
 }
 
 message StatisticResponse {
+    int32 id = 1;
+}
+
+// GetStatisticById
+message GetStatisticByIdRequest{
+    int32 id = 1;
+}
+message GetStatisticByIdResponse{
     int32 percentSuccess = 1;
     int32 numberOfAttempts = 2;
+    google.protobuf.Timestamp completedAt = 3;
+}
+
+
+// GetAwailableYears
+message GetAwailableYearsRequest{
+    int32 userId = 1;
+}
+
+message GetAwailableYearsResponse{
+    repeated int32 awailableYears = 1;
 }
 
 
