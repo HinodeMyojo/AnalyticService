@@ -2,6 +2,7 @@ version: '3.5'
 
 services:
   statisticservice.api:
+    container_name: statistic-service
     image: ${DOCKER_REGISTRY-}statisticserviceapi
     build:
       context: .
