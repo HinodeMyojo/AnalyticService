@@ -10,8 +10,20 @@ package statistic;
 
 
 service Statistic {
+    // Тест соединения
+    rpc Ping(PingRequest) returns (PingResponse); 
+    // Сохранение статистики
     rpc SaveStatistic (StatisticRequest) returns (StatisticResponse);
+    // Получение списка доступных годов для статистики
+    rpc GetAwailableYears(GetAwailableYearsRequest) returns(GetAwailableYearsResponse);
+    // Получение годовой статистики
     rpc GetYearStatisic (YearStatisticRequest) returns (YearStatisticResponse);
+}
+
+// Ping
+message PingRequest{}
+message PingResponse{
+    string message = 1;
 }
 
 // SaveStatistic
@@ -30,6 +42,15 @@ message StatisticElements{
 message StatisticResponse {
     int32 percentSuccess = 1;
     int32 numberOfAttempts = 2;
+}
+
+// GetAwailableYears
+message GetAwailableYearsRequest{
+    int32 userId = 1;
+}
+
+message GetAwailableYearsResponse{
+    repeated int32 awailableYears = 1;
 }
 
 

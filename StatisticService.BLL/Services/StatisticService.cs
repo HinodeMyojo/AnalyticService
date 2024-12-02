@@ -9,9 +9,19 @@ namespace StatisticService.BLL.Services
     {
         private readonly IStatisticRepository _repository;
 
-        public Task<ResponseYearStatisticDto> GetYearStatisticAsync(int userId, int year)
+        public async Task<ResponseYearStatisticDto> GetYearStatisticAsync(int userId, int year)
         {
-            throw new NotImplementedException();
+            ResponseYearStatisticData[][] jaggedArray = new ResponseYearStatisticData[2][];
+
+
+            ResponseYearStatisticDto response = new()
+            {
+                Colspan = [1,23,4],
+                Data = jaggedArray,
+                Year = 2024
+            };
+
+            return response;
         }
 
         public async Task<ResponseStatisticDto> SaveStatisticAsync(RequestStatisticDto model)

@@ -15,6 +15,26 @@ namespace StatisticService.API.Services
             _service = service;
         }
 
+        /// <summary>
+        /// Метод для проверки связи между серверами
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override async Task<PingResponse> Ping(PingRequest request, ServerCallContext context)
+        {
+            return new PingResponse()
+            {
+                Message = "Ground Control to Major Tom!"
+            };
+        }
+
+        /// <summary>
+        /// Метод для сохранения статистики
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override async Task<StatisticResponse> SaveStatistic(StatisticRequest request, ServerCallContext context)
         {
             // Проверяем входящие данные
@@ -31,6 +51,17 @@ namespace StatisticService.API.Services
             };
         }
 
+        public override Task<GetAwailableYearsResponse> GetAwailableYears(GetAwailableYearsRequest request, ServerCallContext context)
+        {
+            return base.GetAwailableYears(request, context);
+        }
+
+        /// <summary>
+        /// Метод для получения информации об активности по заданному году
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override async Task<YearStatisticResponse> GetYearStatisic(YearStatisticRequest request, ServerCallContext context)
         {
             // Проверяем входящие данные
@@ -41,8 +72,7 @@ namespace StatisticService.API.Services
             return new YearStatisticResponse
             {
                 Year = result.Year,
-                Colspan = { result.Colspan },
-                Data = { MapToYearStatisticRows(result.Data) }
+                Colspan = { result.Colspan }
             };
         }
 
