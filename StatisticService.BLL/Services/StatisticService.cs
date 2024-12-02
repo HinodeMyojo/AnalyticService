@@ -22,13 +22,15 @@ namespace StatisticService.BLL.Services
             StatisticEntity entity = new()
             {
                 AnsweredAt = model.CompletedAt,
-                AttemptCount = 
-            }
+                AttemptCount = 1
+            };
+
+            return new ResponseStatisticDto { NumberOfAttempts = attemptCount, PercentSuccess = 0 }; 
         }
 
         private async static Task<int> FindAttemptCountModuleByUser(int moduleId, int userId)
         {
-            
+            return 1;
         }
     }
 }
