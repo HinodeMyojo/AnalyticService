@@ -57,8 +57,9 @@ namespace StatisticService.API.Services
             ResponseStatisticDto result = await _service.GetStatisticById(request.Id);
             return new GetStatisticByIdResponse
             {
-                NumberOfAttempts = 1,
-                PercentSuccess = 1
+                NumberOfAttempts = result.NumberOfAttempts,
+                PercentSuccess = result.PercentSuccess,
+                CompletedAt = result.CompletedAt.ToTimestamp(),
             };
         }
 
