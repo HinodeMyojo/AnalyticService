@@ -67,8 +67,16 @@ namespace StatisticService.DAL.Repository
 
         public async Task<StatisticEntity?> GetStatisticAsync(Expression<Func<StatisticEntity, bool>> predicate)
         {
-            StatisticEntity? result = await _context.StatisticEntities.Where(predicate).FirstOrDefaultAsync();
-            return result;
+            try
+            {
+                StatisticEntity? result = await _context
+                    .StatisticEntities.Where(predicate).Include(x => x.Elements).FirstOrDefaultAsync();
+                return result;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<int> SaveStatisticAsync(StatisticEntity entity)

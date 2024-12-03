@@ -37,7 +37,8 @@ namespace StatisticService.BLL.Services
                 ResponseStatisticDto model = new()
                 {
                     NumberOfAttempts = statisticObject.AttemptCount,
-                    PercentSuccess = percentSuccess
+                    PercentSuccess = percentSuccess,
+                    CompletedAt = statisticObject.AnsweredAt
                 };
 
                 return model;
@@ -129,12 +130,12 @@ namespace StatisticService.BLL.Services
                 }
                 return entity.AttemptCount;
             }
-            catch 
+            catch (Exception ex)
             {
                 // TODO logging
                 string message = "Возникла непридвиденная ошибка при " +
                     "определении количества попыток для модуля";
-                throw new Exception(message);
+                throw new Exception(message + ex);
             }
         }
     }
