@@ -89,31 +89,6 @@ namespace StatisticService.BLL.Services
             return response;
         }
 
-        // Private methods
-        #region
-
-        ///// <summary>
-        ///// Метод для получения статистики за год. Сначала пытается найти в БД данные по указанному year.
-        ///// Если в БД данных нет - генерирует, добавляет их в БД и отдает
-        ///// </summary>
-        ///// <param name="year"></param>
-        ///// <returns></returns>
-        //private async YearStatisticData[][] GetYearStatistic(int year)
-        //{
-        //    YearStatisticData[][] yearStatistic;
-
-        //    try
-        //    {
-        //        YearStatisticDto? responseFromDB = await _defaultYearStatisticService.GetYearStatistic(year);
-        //        if (responseFromDB != null)
-        //        {
-                    
-        //        }
-        //    }
-
-        //    return jaggedArray;
-        //}
-
         /// <summary>
         /// Сервис для сохранения статистики по модулю.
         /// </summary>
@@ -139,8 +114,11 @@ namespace StatisticService.BLL.Services
 
             int answer = await _repository.SaveStatisticAsync(entity);
 
-            return answer; 
+            return answer;
         }
+
+        // Private methods
+        #region
 
         /// <summary>
         /// Вспомогательный метод по подсчету процента правильных ответов
