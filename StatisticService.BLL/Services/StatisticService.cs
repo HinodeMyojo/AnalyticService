@@ -1,20 +1,32 @@
-﻿using StatisticService.BLL.Abstractions;
+﻿using StatisticService.BLL.Abstractions.Repository;
+using StatisticService.BLL.Abstractions.Service;
 using StatisticService.BLL.Dto;
+using StatisticService.BLL.Dto.YearStatistic;
 using StatisticService.BLL.Entity;
-using StatisticService.DAL.Repository;
 
 namespace StatisticService.BLL.Services
 {
     public class StatisticService : IStatisticService
     {
+        private readonly IDefaultYearStatisticService _defaultYearStatisticService;
         private readonly IStatisticRepository _repository;
-        private readonly int DEFAULT_ATTEMT_VALUE = 0;
 
-        public StatisticService(IStatisticRepository repository)
+        private const int INITIAL_ATTEMPT_COUNT = 0;
+
+        public StatisticService(
+            IStatisticRepository repository, 
+            IDefaultYearStatisticService defaultYearStatisticService)
         {
             _repository = repository;
+            _defaultYearStatisticService = defaultYearStatisticService;
         }
 
+        /// <summary>
+        /// Получение статистики по Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<ResponseStatisticDto> GetStatisticById(int id)
         {
             StatisticEntity? statisticObject = await _repository.GetStatisticAsync(x => x.Id == id);
@@ -24,17 +36,52 @@ namespace StatisticService.BLL.Services
                 throw new Exception(message);
             }
 
+            try
+            {
+                CountPersentSuccess(statisticObject.Elements, out int percentSuccess);
 
+                ResponseStatisticDto model = new()
+                {
+                    NumberOfAttempts = statisticObject.AttemptCount,
+                    PercentSuccess = percentSuccess,
+                    CompletedAt = statisticObject.AnsweredAt
+                };
+
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось получить информацию о процентном успехе пользователя!", ex);
+            }
         }
 
-        public async Task<ResponseYearStatisticDto> GetYearStatisticAsync(int userId, int year)
+        /// <summary>
+        /// Получение статистики пользователя по указанному году
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        public async Task<YearStatisticDto> GetYearStatisticAsync(int userId, int year)
         {
-            ResponseYearStatisticData[][] jaggedArray = new ResponseYearStatisticData[2][];
+            DateTime firstDay = new(year, 1, 1);
+            DateTime lastDay = new(year, 12, 31);
 
+            StatisticEntity? responseFromDB = await _repository
+                .GetStatisticAsync(x => x.UserId == userId && x.AnsweredAt > firstDay && x.AnsweredAt < lastDay);
 
-            ResponseYearStatisticDto response = new()
+            // Если данных об активности нет
+            if (responseFromDB == null)
             {
-                Colspan = [1,23,4],
+                YearStatisticDto defaultYeatStatistic = await _defaultYearStatisticService
+                    .GetOrCreateDefaultYearStatistic(year);
+            }
+
+            YearStatisticData[][] jaggedArray = new YearStatisticData[2][];
+
+
+            YearStatisticDto response = new()
+            {
+                Colspan = [1, 23, 4],
                 Data = jaggedArray,
                 Year = 2024
             };
@@ -67,7 +114,26 @@ namespace StatisticService.BLL.Services
 
             int answer = await _repository.SaveStatisticAsync(entity);
 
-            return answer; 
+            return answer;
+        }
+
+        // Private methods
+        #region
+
+        /// <summary>
+        /// Вспомогательный метод по подсчету процента правильных ответов
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private static void CountPersentSuccess(List<ElementStatisticEntity> elements, out int percentSuccess)
+        {
+            if (elements.Count == 0)
+            {
+                percentSuccess = 0;
+                return;
+            }
+            int correctAnswers = elements.Count(e => e.Answer);
+            percentSuccess = (correctAnswers * 100) / elements.Count;
         }
 
         /// <summary>
@@ -86,17 +152,18 @@ namespace StatisticService.BLL.Services
                     x => x.UserId == userId && x.ModuleId == moduleId);
                 if (entity == null)
                 {
-                    return DEFAULT_ATTEMT_VALUE;
+                    return INITIAL_ATTEMPT_COUNT;
                 }
                 return entity.AttemptCount;
             }
-            catch 
+            catch (Exception ex)
             {
                 // TODO logging
                 string message = "Возникла непридвиденная ошибка при " +
                     "определении количества попыток для модуля";
-                throw new Exception(message);
+                throw new Exception(message + ex);
             }
         }
+        #endregion
     }
 }
