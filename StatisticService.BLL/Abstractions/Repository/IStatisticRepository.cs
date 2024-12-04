@@ -1,7 +1,7 @@
 ﻿using StatisticService.BLL.Entity;
 using System.Linq.Expressions;
 
-namespace StatisticService.DAL.Repository
+namespace StatisticService.BLL.Abstractions.Repository
 {
     public interface IStatisticRepository
     {

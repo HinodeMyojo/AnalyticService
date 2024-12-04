@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StatisticService.BLL.Abstractions;
+using StatisticService.BLL.Abstractions.Repository;
 using StatisticService.BLL.Entity;
 
 namespace StatisticService.DAL.Repository

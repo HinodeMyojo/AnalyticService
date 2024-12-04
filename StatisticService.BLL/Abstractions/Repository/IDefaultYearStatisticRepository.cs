@@ -1,6 +1,6 @@
 ﻿using StatisticService.BLL.Entity;
 
-namespace StatisticService.BLL.Abstractions
+namespace StatisticService.BLL.Abstractions.Repository
 {
     public interface IDefaultYearStatisticRepository
     {

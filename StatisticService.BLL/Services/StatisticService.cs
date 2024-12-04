@@ -1,21 +1,24 @@
-﻿using StatisticService.BLL.Abstractions;
+﻿using StatisticService.BLL.Abstractions.Repository;
+using StatisticService.BLL.Abstractions.Service;
 using StatisticService.BLL.Dto;
 using StatisticService.BLL.Dto.YearStatistic;
 using StatisticService.BLL.Entity;
-using StatisticService.DAL.Repository;
 
 namespace StatisticService.BLL.Services
 {
     public class StatisticService : IStatisticService
     {
+        private readonly IDefaultYearStatisticService _defaultYearStatisticService;
         private readonly IStatisticRepository _repository;
-        private const int INITIAL_ATTEMPT_COUNT = 0;
-        private const int COUNT_DAYS_IN_WEEK = 7;
-        private const int COUNT_MONTHS_IN_YEAR = 12;
 
-        public StatisticService(IStatisticRepository repository)
+        private const int INITIAL_ATTEMPT_COUNT = 0;
+
+        public StatisticService(
+            IStatisticRepository repository, 
+            IDefaultYearStatisticService defaultYearStatisticService)
         {
             _repository = repository;
+            _defaultYearStatisticService = defaultYearStatisticService;
         }
 
         /// <summary>
@@ -58,7 +61,7 @@ namespace StatisticService.BLL.Services
         /// <param name="userId"></param>
         /// <param name="year"></param>
         /// <returns></returns>
-        public async Task<ResponseYearStatisticDto> GetYearStatisticAsync(int userId, int year)
+        public async Task<YearStatisticDto> GetYearStatisticAsync(int userId, int year)
         {
 
             YearStatisticData[][] result;
@@ -69,6 +72,7 @@ namespace StatisticService.BLL.Services
             StatisticEntity? responseFromDB = await _repository
                 .GetStatisticAsync(x => x.UserId == userId && x.AnsweredAt > firstDay && x.AnsweredAt < lastDay);
 
+            // Если данных об активности нет
             if (responseFromDB == null)
             {
                 result = GenerateEmptyYearStatistic(year);
@@ -77,7 +81,7 @@ namespace StatisticService.BLL.Services
             YearStatisticData[][] jaggedArray = new YearStatisticData[2][];
 
 
-            ResponseYearStatisticDto response = new()
+            YearStatisticDto response = new()
             {
                 Colspan = [1, 23, 4],
                 Data = jaggedArray,
@@ -87,83 +91,30 @@ namespace StatisticService.BLL.Services
             return response;
         }
 
-        /// <summary>
-        /// Метод для получения статистики за год. Сначала пытается найти в БД данные по указанному year.
-        /// Если в БД данных нет - генерирует, добавляет их в БД и отдает
-        /// </summary>
-        /// <param name="year"></param>
-        /// <returns></returns>
-        private static YearStatisticData[][] GetYearStatistic(int year)
-        {
-            YearStatisticData[][] jaggedArray = new YearStatisticData[2][];
+        // Private methods
+        #region
 
-            return jaggedArray;
-        }
+        ///// <summary>
+        ///// Метод для получения статистики за год. Сначала пытается найти в БД данные по указанному year.
+        ///// Если в БД данных нет - генерирует, добавляет их в БД и отдает
+        ///// </summary>
+        ///// <param name="year"></param>
+        ///// <returns></returns>
+        //private async YearStatisticData[][] GetYearStatistic(int year)
+        //{
+        //    YearStatisticData[][] yearStatistic;
 
-        /// <summary>
-        /// Генерирует статистику за год
-        /// </summary>
-        /// <param name="year"></param>
-        /// <returns></returns>
-        private static YearStatisticData[][] GenerateEmptyYearStatistic(int year)
-        {
-            // Инициализация объекта для хранения данных
-            YearStatisticModel yearStatistic = new()
-            {
-                Year = year
-            };
+        //    try
+        //    {
+        //        YearStatisticDto? responseFromDB = await _defaultYearStatisticService.GetYearStatistic(year);
+        //        if (responseFromDB != null)
+        //        {
+                    
+        //        }
+        //    }
 
-            Random random = new();
-
-            // Проходим по каждому месяцу года
-            for (int month = 1; month <= COUNT_MONTHS_IN_YEAR; month++)
-            {
-                // Получаем количество дней в текущем месяце
-                int daysInMonth = DateTime.DaysInMonth(year, month);
-
-                for (int day = 1; day <= daysInMonth; day++)
-                {
-                    DateTime date = new(year, month, day);
-
-                    // Добавляем данные текущего дня
-                    yearStatistic.Data.Add(new YearStatisticData
-                    {
-                        Date = date,
-                        Value = 0
-                    });
-
-                    // Для первого дня января добавляем пустые дни до первого дня недели
-                    if (month == 1 && day == 1)
-                    {
-                        // Определяем какой день недели по счету является первое января
-                        int firstDayOfWeek = (int)date.DayOfWeek;
-
-                        // Добавляем пустые дни до первого дня (если не воскресенье)
-                        for (int i = 0; i < firstDayOfWeek; i++)
-                        {
-                            yearStatistic.Data.Insert(0, new YearStatisticData
-                            {
-                                Date = date.AddDays(-1 - i), // Смещение на предыдущие дни
-                                Value = null // Пустое значение для отсутствующих дней
-                            });
-                        }
-                    }
-                }
-            }
-
-            // Создаем двумерный массив для группировки по дням недели
-            YearStatisticData[][] result = new YearStatisticData[COUNT_DAYS_IN_WEEK][];
-
-            for (int i = 0; i < COUNT_DAYS_IN_WEEK; i++)
-            {
-                // Фильтруем данные по конкретному дню недели (0 = Воскресенье, 6 = Суббота)
-                result[i] = yearStatistic.Data
-                    .Where(x => x.Date.DayOfWeek == (DayOfWeek)i)
-                    .ToArray();
-            }
-
-            return result;
-        }
+        //    return jaggedArray;
+        //}
 
         /// <summary>
         /// Сервис для сохранения статистики по модулю.
@@ -192,9 +143,6 @@ namespace StatisticService.BLL.Services
 
             return answer; 
         }
-
-        // Private methods
-        #region
 
         /// <summary>
         /// Вспомогательный метод по подсчету процента правильных ответов

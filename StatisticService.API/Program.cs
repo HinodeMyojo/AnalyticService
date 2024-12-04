@@ -1,4 +1,6 @@
-using StatisticService.BLL.Abstractions;
+using StatisticService.BLL.Abstractions.Repository;
+using StatisticService.BLL.Abstractions.Service;
+using StatisticService.BLL.Services;
 using StatisticService.DAL;
 using StatisticService.DAL.Repository;
 
@@ -12,6 +14,9 @@ builder.Services.AddDbContext<ApplicationContext>();
 
 builder.Services.AddTransient<IStatisticService, StatisticService.BLL.Services.StatisticService>();
 builder.Services.AddTransient<IStatisticRepository, StatisticRepository>();
+
+builder.Services.AddTransient<IDefaultYearStatisticRepository, DefaultYearStatisticRepository>();
+builder.Services.AddTransient<IDefaultYearStatisticService, DefaultYearStatisticService>();
 
 var app = builder.Build();
 
