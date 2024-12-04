@@ -63,9 +63,6 @@ namespace StatisticService.BLL.Services
         /// <returns></returns>
         public async Task<YearStatisticDto> GetYearStatisticAsync(int userId, int year)
         {
-
-            YearStatisticData[][] result;
-
             DateTime firstDay = new(year, 1, 1);
             DateTime lastDay = new(year, 12, 31);
 
@@ -75,7 +72,8 @@ namespace StatisticService.BLL.Services
             // Если данных об активности нет
             if (responseFromDB == null)
             {
-                result = GenerateEmptyYearStatistic(year);
+                YearStatisticDto defaultYeatStatistic = await _defaultYearStatisticService
+                    .GetOrCreateDefaultYearStatistic(year);
             }
 
             YearStatisticData[][] jaggedArray = new YearStatisticData[2][];

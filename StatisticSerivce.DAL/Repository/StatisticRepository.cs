@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StatisticService.BLL.Abstractions.Repository;
 using StatisticService.BLL.Entity;
 using System.Linq.Expressions;
 

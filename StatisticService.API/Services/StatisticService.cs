@@ -1,7 +1,7 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using StatisticService.API.Infrastructure;
-using StatisticService.BLL.Abstractions;
+using StatisticService.BLL.Abstractions.Service;
 using StatisticService.BLL.Dto;
 using StatisticService.BLL.Dto.YearStatistic;
 
@@ -80,7 +80,7 @@ namespace StatisticService.API.Services
             // Проверяем входящие данные
             Validator.AssertRequestYearStatistic(request);
 
-            ResponseYearStatisticDto result = await _service.GetYearStatisticAsync(request.UserId, request.Year);
+            YearStatisticDto result = await _service.GetYearStatisticAsync(request.UserId, request.Year);
 
             return new YearStatisticResponse
             {
