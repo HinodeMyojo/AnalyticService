@@ -3,7 +3,10 @@ syntax = "proto3";
 // Пространство имен
 option csharp_namespace = "StatisticService.API";
 
+// Для поддержки времени
 import "google/protobuf/timestamp.proto";
+// Для поддержки nullable int'ов
+import "google/protobuf/wrappers.proto";
 
 // Название проекта
 package statistic;
@@ -84,7 +87,7 @@ message YearStatisticRow {
 
 message YearStatisticModel{
     google.protobuf.Timestamp date = 1;
-    int32 value = 2;
+    google.protobuf.Int32Value value = 2;
 }
 
 

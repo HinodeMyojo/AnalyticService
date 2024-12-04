@@ -19,11 +19,18 @@ namespace StatisticService.DAL
         
         public DbSet<StatisticEntity> StatisticEntities { get; set; }
         public DbSet<ElementStatisticEntity> ElementStatisticEntities { get; set; }
+        public DbSet<DefaultYearStatisticEntity> DefaultYearStatisticEntities {  get; set; }
 
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<DefaultYearStatisticEntity>().HasIndex(x => x.Year).IsUnique();
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(_configuration.GetConnectionString("DefaultConnection"));
+
         }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using StatisticService.API.Infrastructure;
-using StatisticService.BLL.Abstractions;
+using StatisticService.BLL.Abstractions.Service;
 using StatisticService.BLL.Dto;
+using StatisticService.BLL.Dto.YearStatistic;
 
 namespace StatisticService.API.Services
 {
@@ -57,8 +58,9 @@ namespace StatisticService.API.Services
             ResponseStatisticDto result = await _service.GetStatisticById(request.Id);
             return new GetStatisticByIdResponse
             {
-                NumberOfAttempts = 1,
-                PercentSuccess = 1
+                NumberOfAttempts = result.NumberOfAttempts,
+                PercentSuccess = result.PercentSuccess,
+                CompletedAt = result.CompletedAt.ToTimestamp(),
             };
         }
 
@@ -78,7 +80,7 @@ namespace StatisticService.API.Services
             // Проверяем входящие данные
             Validator.AssertRequestYearStatistic(request);
 
-            ResponseYearStatisticDto result = await _service.GetYearStatisticAsync(request.UserId, request.Year);
+            YearStatisticDto result = await _service.GetYearStatisticAsync(request.UserId, request.Year);
 
             return new YearStatisticResponse
             {
@@ -105,7 +107,7 @@ namespace StatisticService.API.Services
                 UserId = request.UserId
             };
 
-        private static IEnumerable<YearStatisticRow> MapToYearStatisticRows(ResponseYearStatisticData[][] data) =>
+        private static IEnumerable<YearStatisticRow> MapToYearStatisticRows(YearStatisticData[][] data) =>
             data.Select(row => new YearStatisticRow
             {
                 Values = { row.Select(item => new YearStatisticModel
