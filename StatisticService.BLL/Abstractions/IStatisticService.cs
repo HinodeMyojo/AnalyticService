@@ -1,5 +1,6 @@
 ﻿
 using StatisticService.BLL.Dto;
+using StatisticService.BLL.Dto.YearStatistic;
 
 namespace StatisticService.BLL.Abstractions
 {

@@ -3,6 +3,7 @@ using Grpc.Core;
 using StatisticService.API.Infrastructure;
 using StatisticService.BLL.Abstractions;
 using StatisticService.BLL.Dto;
+using StatisticService.BLL.Dto.YearStatistic;
 
 namespace StatisticService.API.Services
 {
@@ -106,7 +107,7 @@ namespace StatisticService.API.Services
                 UserId = request.UserId
             };
 
-        private static IEnumerable<YearStatisticRow> MapToYearStatisticRows(ResponseYearStatisticData[][] data) =>
+        private static IEnumerable<YearStatisticRow> MapToYearStatisticRows(YearStatisticData[][] data) =>
             data.Select(row => new YearStatisticRow
             {
                 Values = { row.Select(item => new YearStatisticModel

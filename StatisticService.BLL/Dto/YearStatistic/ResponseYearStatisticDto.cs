@@ -1,11 +1,11 @@
-﻿namespace StatisticService.BLL.Dto
+﻿namespace StatisticService.BLL.Dto.YearStatistic
 {
     public class ResponseYearStatisticDto
     {
         public int Year { get; set; }
-        public ResponseYearStatisticData[][] Data { get; set; } = [];
+        public YearStatisticData[][] Data { get; set; } = [];
         public List<int> Colspan { get; set; } = [];
     }
 
-    
+
 }
