@@ -85,32 +85,48 @@ namespace StatisticService.BLL.Services
 
         private static YearStatisticDto SetUserStatisticToDefault(YearStatisticDto defaultYearStatistic, IEnumerable<StatisticEntity> responseFromDB)
         {
-            //const int OFFSET = 1;
-
-            DateTime answerDay;
-            Parallel.ForEach(responseFromDB, element =>
+            foreach (var element in responseFromDB)
             {
-                answerDay = element.AnsweredAt;
-
+                DateTime answerDay = element.AnsweredAt;
                 int dayOfWeek = (int)answerDay.DayOfWeek;
 
-                var biba = defaultYearStatistic
-                .Data[dayOfWeek];
-
                 YearStatisticData? selectedDate = defaultYearStatistic
-                .Data[dayOfWeek]
-                .Where(x => x.Date.DayOfYear == answerDay.DayOfYear)
-                .FirstOrDefault();
+                    .Data[dayOfWeek]
+                    .FirstOrDefault(x => x.Date.DayOfYear == answerDay.DayOfYear);
 
                 if (selectedDate != null)
                 {
-                    YearStatisticData day = selectedDate;
-                    day.Value++;
+                    selectedDate.Value++;
                 }
-            });
+            }
 
             return defaultYearStatistic;
         }
+        //private static YearStatisticDto SetUserStatisticToDefault(YearStatisticDto defaultYearStatistic, IEnumerable<StatisticEntity> responseFromDB)
+        //{
+        //    //const int OFFSET = 1;
+
+        //    DateTime answerDay;
+        //    Parallel.ForEach(responseFromDB, element =>
+        //    {
+        //        answerDay = element.AnsweredAt;
+
+        //        int dayOfWeek = (int)answerDay.DayOfWeek;
+
+        //        YearStatisticData? selectedDate = defaultYearStatistic
+        //        .Data[dayOfWeek]
+        //        .Where(x => x.Date.DayOfYear == answerDay.DayOfYear)
+        //        .FirstOrDefault();
+
+        //        if (selectedDate != null)
+        //        {
+        //            YearStatisticData day = selectedDate;
+        //            day.Value++;
+        //        }
+        //    });
+
+        //    return defaultYearStatistic;
+        //}
 
         /// <summary>
         /// Сервис для сохранения статистики по модулю.
