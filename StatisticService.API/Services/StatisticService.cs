@@ -82,11 +82,15 @@ namespace StatisticService.API.Services
 
             YearStatisticDto result = await _service.GetYearStatisticAsync(request.UserId, request.Year);
 
-            return new YearStatisticResponse
+            YearStatisticResponse response = new()
             {
                 Year = result.Year,
-                Colspan = { result.Colspan }
+                Colspan = { result.Colspan },
             };
+
+            response.Data.AddRange(MapToYearStatisticRows(result.Data));
+
+            return response;
         }
 
         /// <summary>

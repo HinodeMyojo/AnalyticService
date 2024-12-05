@@ -148,7 +148,8 @@ namespace StatisticService.BLL.Services
 
                 for (int day = 1; day <= daysInMonth; day++)
                 {
-                    DateTime date = new(year, month, day);
+                    // Формируем дату в формате UTC
+                    DateTime date = new(year, month, day, 0, 0, 0, DateTimeKind.Utc);
 
                     // Добавляем данные текущего дня
                     yearStatistic.Data.Add(new YearStatisticData
