@@ -63,30 +63,45 @@ namespace StatisticService.BLL.Services
         /// <returns></returns>
         public async Task<YearStatisticDto> GetYearStatisticAsync(int userId, int year)
         {
-            DateTime firstDay = new(year, 1, 1);
-            DateTime lastDay = new(year, 12, 31);
 
-            StatisticEntity? responseFromDB = await _repository
-                .GetStatisticAsync(x => x.UserId == userId && x.AnsweredAt > firstDay && x.AnsweredAt < lastDay);
+            IEnumerable<StatisticEntity> responseFromDB = await _repository
+                .GetAllStatisticsAsync(x => x.UserId == userId && x.AnsweredAt.Year == year);
 
-            // Если данных об активности нет
-            if (responseFromDB == null)
+            YearStatisticDto defaultYearStatistic = await _defaultYearStatisticService
+                .GetOrCreateDefaultYearStatistic(year);
+
+            YearStatisticDto resultYearStatistic;
+
+            if (responseFromDB.Count() != 0)
             {
-                YearStatisticDto defaultYeatStatistic = await _defaultYearStatisticService
-                    .GetOrCreateDefaultYearStatistic(year);
+                resultYearStatistic = SetUserStatisticToDefault(defaultYearStatistic, responseFromDB);
+                return resultYearStatistic;
             }
 
-            YearStatisticData[][] jaggedArray = new YearStatisticData[2][];
 
+            resultYearStatistic = defaultYearStatistic;
+            return resultYearStatistic;
+        }
 
-            YearStatisticDto response = new()
+        private static YearStatisticDto SetUserStatisticToDefault(YearStatisticDto defaultYearStatistic, IEnumerable<StatisticEntity> responseFromDB)
+        {
+            DateTime answerDay;
+            Parallel.ForEach(responseFromDB, element =>
             {
-                Colspan = [1, 23, 4],
-                Data = jaggedArray,
-                Year = 2024
-            };
+                answerDay = element.AnsweredAt;
+                IEnumerable<YearStatisticData>? selectedDate = defaultYearStatistic
+                .Data[(int)answerDay.DayOfWeek]
+                .Where(x => x.Date.DayOfYear == answerDay.DayOfYear)
+                .ToList();
 
-            return response;
+                if (selectedDate != null && selectedDate.Any())
+                {
+                    YearStatisticData day = selectedDate.First();
+                    day.Value++;
+                }
+            });
+
+            return defaultYearStatistic;
         }
 
         /// <summary>

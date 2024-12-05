@@ -70,13 +70,29 @@ namespace StatisticService.DAL.Repository
         {
             try
             {
-                StatisticEntity? result = await _context
-                    .StatisticEntities.Where(predicate).Include(x => x.Elements).FirstOrDefaultAsync();
-                return result;
+                return await _context.StatisticEntities
+                    .Where(predicate)
+                    .Include(x => x.Elements)
+                    .FirstOrDefaultAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw ex;
+                throw new ApplicationException("Не удалось получить статистику", ex);
+            }
+        }
+
+        public async Task<IEnumerable<StatisticEntity>> GetAllStatisticsAsync(Expression<Func<StatisticEntity, bool>> predicate)
+        {
+            try
+            {
+                return await _context.StatisticEntities
+                    .Where(predicate)
+                    .Include(x => x.Elements)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Не удалось получить статистику", ex);
             }
         }
 
