@@ -82,26 +82,6 @@ namespace StatisticService.BLL.Services
             resultYearStatistic = defaultYearStatistic;
             return resultYearStatistic;
         }
-
-        private static YearStatisticDto SetUserStatisticToDefault(YearStatisticDto defaultYearStatistic, IEnumerable<StatisticEntity> responseFromDB)
-        {
-            foreach (var element in responseFromDB)
-            {
-                DateTime answerDay = element.AnsweredAt;
-                int dayOfWeek = (int)answerDay.DayOfWeek;
-
-                YearStatisticData? selectedDate = defaultYearStatistic
-                    .Data[dayOfWeek]
-                    .FirstOrDefault(x => x.Date.DayOfYear == answerDay.DayOfYear);
-
-                if (selectedDate != null)
-                {
-                    selectedDate.Value++;
-                }
-            }
-
-            return defaultYearStatistic;
-        }
         //private static YearStatisticDto SetUserStatisticToDefault(YearStatisticDto defaultYearStatistic, IEnumerable<StatisticEntity> responseFromDB)
         //{
         //    //const int OFFSET = 1;
@@ -158,6 +138,32 @@ namespace StatisticService.BLL.Services
 
         // Private methods
         #region
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="defaultYearStatistic"></param>
+        /// <param name="responseFromDB"></param>
+        /// <returns></returns>
+        private static YearStatisticDto SetUserStatisticToDefault(YearStatisticDto defaultYearStatistic, IEnumerable<StatisticEntity> responseFromDB)
+        {
+            foreach (var element in responseFromDB)
+            {
+                DateTime answerDay = element.AnsweredAt;
+                int dayOfWeek = (int)answerDay.DayOfWeek;
+
+                YearStatisticData? selectedDate = defaultYearStatistic
+                    .Data[dayOfWeek]
+                    .FirstOrDefault(x => x.Date.DayOfYear == answerDay.DayOfYear);
+
+                if (selectedDate != null)
+                {
+                    selectedDate.Value++;
+                }
+            }
+
+            return defaultYearStatistic;
+        }
 
         /// <summary>
         /// Вспомогательный метод по подсчету процента правильных ответов

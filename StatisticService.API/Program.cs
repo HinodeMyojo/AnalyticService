@@ -1,22 +1,16 @@
-using StatisticService.BLL.Abstractions.Repository;
-using StatisticService.BLL.Abstractions.Service;
-using StatisticService.BLL.Services;
-using StatisticService.DAL;
-using StatisticService.DAL.Repository;
+using StatisticService.API;
+using StatisticService.API.Interceptors;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
-// Add services to the container.
-builder.Services.AddGrpc();
+builder.Services.AddGrpc( options =>
+{
+    options.Interceptors.Add<ExceptionInterceptor>();
+});
 
-builder.Services.AddDbContext<ApplicationContext>();
-
-builder.Services.AddTransient<IStatisticService, StatisticService.BLL.Services.StatisticService>();
-builder.Services.AddTransient<IStatisticRepository, StatisticRepository>();
-
-builder.Services.AddTransient<IDefaultYearStatisticRepository, DefaultYearStatisticRepository>();
-builder.Services.AddTransient<IDefaultYearStatisticService, DefaultYearStatisticService>();
+// Для регистрации сервисов
+builder.Services.RegisterService();
 
 var app = builder.Build();
 
