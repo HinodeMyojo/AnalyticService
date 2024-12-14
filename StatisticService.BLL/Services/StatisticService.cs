@@ -55,6 +55,11 @@ namespace StatisticService.BLL.Services
             }
         }
 
+        public async Task<List<StatisticEntity>> GetLastActivity(int userId)
+        {
+            return await _repository.GetLastActivity(userId);
+        }
+
         /// <summary>
         /// Получение статистики пользователя по указанному году
         /// </summary>

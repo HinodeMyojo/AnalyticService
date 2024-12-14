@@ -10,5 +10,6 @@ namespace StatisticService.BLL.Abstractions.Repository
         Task EditStatisticAsync(StatisticEntity entity);
         Task DeleteStatisticAsync(int id);
         Task<IEnumerable<StatisticEntity>> GetAllStatisticsAsync(Expression<Func<StatisticEntity, bool>> predicate);
+        Task<List<StatisticEntity>> GetLastActivity(int userId);
     }
 }

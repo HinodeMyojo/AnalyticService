@@ -23,6 +23,8 @@ service Statistic {
     rpc GetAwailableYears(GetAwailableYearsRequest) returns(GetAwailableYearsResponse);
     // ѕолучение годовой статистики
     rpc GetYearStatisic (YearStatisticRequest) returns (YearStatisticResponse);
+    // ѕолучение последних пройденных модулей
+    rpc GetLastActivity (GetLastActivityRequest) returns (GetLastActivityResponse);
 }
 
 // Ping
@@ -88,6 +90,18 @@ message YearStatisticRow {
 message YearStatisticModel{
     google.protobuf.Timestamp date = 1;
     google.protobuf.Int32Value value = 2;
+}
+
+// GetLastActivity
+message GetLastActivityRequest{
+    int32 userId = 1;
+}
+message GetLastActivityResponse{
+    repeated GetLastActivityModel Data = 1;
+}
+message GetLastActivityModel{
+    int32 ModuleId = 1;
+    google.protobuf.Timestamp CompletedAt = 2;
 }
 
 
