@@ -4,6 +4,7 @@ using StatisticService.API.Infrastructure;
 using StatisticService.BLL.Abstractions.Service;
 using StatisticService.BLL.Dto;
 using StatisticService.BLL.Dto.YearStatistic;
+using StatisticService.BLL.Entity;
 
 namespace StatisticService.API.Services
 {
@@ -15,6 +16,25 @@ namespace StatisticService.API.Services
         public StatisticService(IStatisticService service)
         {
             _service = service;
+        }
+
+        public override async Task<GetLastActivityResponse> GetLastActivity(GetLastActivityRequest request, ServerCallContext context)
+        {
+            List<StatisticEntity> lastActivityFromDatabase = await _service.GetLastActivity(request.UserId);
+
+            GetLastActivityResponse result = new()
+            {};
+
+            foreach (StatisticEntity item in lastActivityFromDatabase)
+            {
+                result.Data.Add(new GetLastActivityModel()
+                {
+                    ModuleId = item.ModuleId,
+                    CompletedAt = item.AnsweredAt.ToTimestamp()
+                });
+            }
+
+            return result;
         }
 
         /// <summary>

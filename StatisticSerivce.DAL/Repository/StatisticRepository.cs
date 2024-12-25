@@ -109,5 +109,21 @@ namespace StatisticService.DAL.Repository
                 throw new Exception("Не удалось сохранить сущность статистики!");
             }
         }
+
+        /// <summary>
+        /// Получает последние пройденные модули пользователем. В ином случае - возвращает пустой массив.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<List<StatisticEntity>> GetLastActivity(int userId)
+        {
+            return await _context
+                .StatisticEntities
+                .AsNoTracking()
+                .Where(x => x.UserId == userId)
+                .OrderByDescending(x => x.AnsweredAt)
+                .Take(3)
+                .ToListAsync();
+        }
     }
 }
