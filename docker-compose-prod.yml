@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  statisticservice.api:
+    container_name: statistic-service
+    build:
+      context: .
+      dockerfile: StatisticService.API/Dockerfile
+    networks:
+        - cards-network
+    ports:
+        - "5003:8080"
+        - "5004:8081"
+networks:
+  cards-network:
+    external: true
