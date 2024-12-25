@@ -42,6 +42,6 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /var/www/statistic-service
+            cd /var/www/statistic-service/AnalyticService
             docker-compose -f docker-compose-prod.yml up -d --build
 
