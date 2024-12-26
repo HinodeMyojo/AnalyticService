@@ -8,6 +8,7 @@ EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
+COPY ["../AnalyticService/StatisticService.API/Protos", "/src/Protos"]
 WORKDIR /src
 COPY ["StatisticService.API/StatisticService.API.csproj", "StatisticService.API/"]
 COPY ["StatisticService.BLL/StatisticService.BLL.csproj", "StatisticService.BLL/"]
