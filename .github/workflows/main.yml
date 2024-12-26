@@ -24,16 +24,24 @@ jobs:
             ssh-agent -a $SSH_AUTH_SOCK > /dev/null
             ssh-add /home/runner/.ssh/github_actions
 
-      - name: Клонирование репозитория на удаленный сервак
+      - name: Клонирование или обновление репозитория
         uses: appleboy/ssh-action@v0.1.6
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            rm -rf /var/www/statistic-service/AnalyticService/*
-            cd /var/www/pleiades-server
-            git clone https://github.com/HinodeMyojo/AnalyticService.git
+            if [ -d "/var/www/pleiades-server/AnalyticService/.git" ]; then
+              echo "Репозиторий есть..."
+              cd /var/www/pleiades-server/AnalyticService
+              git reset --hard
+              git pull origin main
+            else
+              echo "Клонирование репозитория..."
+              rm -rf /var/www/pleiades-server/AnalyticService
+              cd /var/www/pleiades-server
+              git clone https://github.com/HinodeMyojo/AnalyticService.git
+            fi
             
       - name: Деплой сервера
         uses: appleboy/ssh-action@v0.1.6
@@ -43,5 +51,17 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /var/www/statistic-service/AnalyticService/
+            echo "Стартуем деплой"
+            docker-compose -f docker-compose-prod.yml pull
             docker-compose -f docker-compose-prod.yml up -d --build
+            echo "Деплой завершился."
+
+      - name: Проверка состояния контейнеров
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            docker ps --format "table {{.Names}}\t{{.Status}}"
 
