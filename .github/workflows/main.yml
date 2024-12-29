@@ -31,7 +31,8 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            rm -rf /var/www/pleiades-server/AnalyticService/*
+            sudo rm -rf  /var/www/pleiades-server/AnalyticService/*
+            sudo rm -rf  /var/www/pleiades-server/AnalyticService/.*
             cd /var/www/pleiades-server
             git clone https://github.com/HinodeMyojo/AnalyticService.git
             
