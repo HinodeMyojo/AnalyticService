@@ -45,7 +45,6 @@ jobs:
           script: |
             cd /var/www/statistic-service/AnalyticService/
             echo "Стартуем деплой"
-            docker-compose -f docker-compose-prod.yml pull
             docker-compose -f docker-compose-prod.yml up -d --build
             echo "Деплой завершился."
 
