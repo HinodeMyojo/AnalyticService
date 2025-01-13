@@ -2,6 +2,8 @@ version: '3.5'
 
 services:
   statisticservice.api:
+    environment:
+      CONNECTION_STRING: ${CONNECTION_STRING}
     container_name: statistic-service
     image: ${DOCKER_REGISTRY-}statisticserviceapi
     build:

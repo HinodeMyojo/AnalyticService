@@ -1,29 +1,29 @@
 syntax = "proto3";
 
-// Пространство имен
+// РџСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ РёРјРµРЅ
 option csharp_namespace = "StatisticService.API";
 
-// Для поддержки времени
+// Р”Р»СЏ РїРѕРґРґРµСЂР¶РєРё РІСЂРµРјРµРЅРё
 import "google/protobuf/timestamp.proto";
-// Для поддержки nullable int'ов
+// Р”Р»СЏ РїРѕРґРґРµСЂР¶РєРё nullable int'РѕРІ
 import "google/protobuf/wrappers.proto";
 
-// Название проекта
+// РќР°Р·РІР°РЅРёРµ РїСЂРѕРµРєС‚Р°
 package statistic;
 
 
 service Statistic {
-    // Тест соединения
+    // РўРµСЃС‚ СЃРѕРµРґРёРЅРµРЅРёСЏ
     rpc Ping(PingRequest) returns (PingResponse); 
-    // Сохранение статистики
+    // РЎРѕС…СЂР°РЅРµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё
     rpc SaveStatistic (StatisticRequest) returns (StatisticResponse);
-    // Получение статистики по Id
+    // РџРѕР»СѓС‡РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё РїРѕ Id
     rpc GetStatisticById (GetStatisticByIdRequest) returns (GetStatisticByIdResponse);
-    // Получение списка доступных годов для статистики
+    // РџРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° РґРѕСЃС‚СѓРїРЅС‹С… РіРѕРґРѕРІ РґР»СЏ СЃС‚Р°С‚РёСЃС‚РёРєРё
     rpc GetAwailableYears(GetAwailableYearsRequest) returns(GetAwailableYearsResponse);
-    // Получение годовой статистики
+    // РџРѕР»СѓС‡РµРЅРёРµ РіРѕРґРѕРІРѕР№ СЃС‚Р°С‚РёСЃС‚РёРєРё
     rpc GetYearStatisic (YearStatisticRequest) returns (YearStatisticResponse);
-    // Получение последних пройденных модулей
+    // РџРѕР»СѓС‡РµРЅРёРµ РїРѕСЃР»РµРґРЅРёС… РїСЂРѕР№РґРµРЅРЅС‹С… РјРѕРґСѓР»РµР№
     rpc GetLastActivity (GetLastActivityRequest) returns (GetLastActivityResponse);
 }
 
@@ -79,8 +79,11 @@ message YearStatisticRequest{
 
 message YearStatisticResponse{
     int32 year = 1;
-    repeated int32 colspan = 2;
-    repeated YearStatisticRow Data = 3; // Массив массивов
+    int32 numberOfActions = 2;
+    int32 activeDays = 3;
+    int32 maximumSeries = 4;
+    repeated int32 colspan = 5;
+    repeated YearStatisticRow Data = 6; // РњР°СЃСЃРёРІ РјР°СЃСЃРёРІРѕРІ
 }
 
 message YearStatisticRow {

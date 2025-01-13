@@ -145,14 +145,16 @@ namespace StatisticService.BLL.Services
         #region
 
         /// <summary>
-        /// 
+        /// Всопомогательный метод для вычисления статистики для пользователя
         /// </summary>
         /// <param name="defaultYearStatistic"></param>
         /// <param name="responseFromDB"></param>
         /// <returns></returns>
-        private static YearStatisticDto SetUserStatisticToDefault(YearStatisticDto defaultYearStatistic, IEnumerable<StatisticEntity> responseFromDB)
+        private static YearStatisticDto SetUserStatisticToDefault(
+            YearStatisticDto defaultYearStatistic, 
+            IEnumerable<StatisticEntity> responseFromDB)
         {
-            foreach (var element in responseFromDB)
+            foreach (StatisticEntity element in responseFromDB)
             {
                 DateTime answerDay = element.AnsweredAt;
                 int dayOfWeek = (int)answerDay.DayOfWeek;

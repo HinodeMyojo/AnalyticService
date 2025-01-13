@@ -11,7 +11,7 @@ builder.Services.AddGrpc( options =>
     options.Interceptors.Add<ExceptionInterceptor>();
 });
 
-// Для регистрации сервисов
+// пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 builder.Services.RegisterService();
 
 var app = builder.Build();
@@ -31,7 +31,7 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-        throw new Exception($"Не удалось обновить базу данных. {connectionString}. {ex}");
+        throw new Exception($"I can't connect((. {connectionString}. {ex}");
     }
 
 }
