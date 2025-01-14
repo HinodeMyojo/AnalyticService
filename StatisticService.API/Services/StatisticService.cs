@@ -105,6 +105,9 @@ namespace StatisticService.API.Services
             YearStatisticResponse response = new()
             {
                 Year = result.Year,
+                ActiveDays = result.ActiveDays,
+                MaximumSeries = result.MaximumSeries,
+                NumberOfActions = result.NumberOfActions,
                 Colspan = { result.Colspan },
             };
 
