@@ -60,14 +60,15 @@ public class StatisticHandler : IStatisticHandler
     /// <exception cref="NotImplementedException"></exception>
     public void MaximumSeriesHander(YearStatisticDto defaultYearStatistic, IEnumerable<StatisticEntity> responseFromDB)
     {
-        HashSet<int> dataSet = 
-            new HashSet<int>(responseFromDB.Select(x => x.AnsweredAt.DayOfYear))
-                .OrderBy(x => x)
-                .ToHashSet();
+        List<int> orderedDays = responseFromDB
+            .Select(x => x.AnsweredAt.DayOfYear)
+            .Distinct()
+            .OrderBy(x => x)
+            .ToList();
         
         ICollection<int> pastDays = [];
         int maxLength = 0;
-        foreach (int day in dataSet)
+        foreach (int day in orderedDays)
         {
             if (pastDays.Contains(day))
             {
@@ -77,7 +78,7 @@ public class StatisticHandler : IStatisticHandler
             int currentLength = 1;
 
             // Ищем следующую часть последовательности
-            while (dataSet.Contains(currentDay + 1))
+            while (orderedDays.Contains(currentDay + 1))
             {
                 currentDay++;
                 currentLength++;
@@ -86,6 +87,8 @@ public class StatisticHandler : IStatisticHandler
 
             maxLength = Math.Max(maxLength, currentLength);
         }
+        
+        defaultYearStatistic.MaximumSeries = maxLength; 
     }
 }
 
