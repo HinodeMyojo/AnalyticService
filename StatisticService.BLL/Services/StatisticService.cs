@@ -3,22 +3,26 @@ using StatisticService.BLL.Abstractions.Service;
 using StatisticService.BLL.Dto;
 using StatisticService.BLL.Dto.YearStatistic;
 using StatisticService.BLL.Entity;
+using StatisticService.BLL.Handlers;
 
 namespace StatisticService.BLL.Services
 {
     public class StatisticService : IStatisticService
     {
         private readonly IDefaultYearStatisticService _defaultYearStatisticService;
+        private readonly IStatisticHandler _statisticHandler;    
         private readonly IStatisticRepository _repository;
 
         private const int INITIAL_ATTEMPT_COUNT = 0;
 
         public StatisticService(
             IStatisticRepository repository, 
-            IDefaultYearStatisticService defaultYearStatisticService)
+            IDefaultYearStatisticService defaultYearStatisticService, 
+            IStatisticHandler statisticHandler)
         {
             _repository = repository;
             _defaultYearStatisticService = defaultYearStatisticService;
+            _statisticHandler = statisticHandler;
         }
 
         /// <summary>
@@ -69,50 +73,27 @@ namespace StatisticService.BLL.Services
         public async Task<YearStatisticDto> GetYearStatisticAsync(int userId, int year)
         {
 
-            IEnumerable<StatisticEntity> responseFromDB = await _repository
+            IEnumerable<StatisticEntity> responseFromDb = await _repository
                 .GetAllStatisticsAsync(x => x.UserId == userId && x.AnsweredAt.Year == year);
 
             YearStatisticDto defaultYearStatistic = await _defaultYearStatisticService
                 .GetOrCreateDefaultYearStatistic(year);
 
             YearStatisticDto resultYearStatistic;
-
-            if (responseFromDB.Count() != 0)
+            
+            // Если в базе мы что-то нашли
+            if (responseFromDb.Count() != 0)
             {
-                resultYearStatistic = SetUserStatisticToDefault(defaultYearStatistic, responseFromDB);
-                return resultYearStatistic;
+                _statisticHandler.DataHandler(defaultYearStatistic, responseFromDb);
+                _statisticHandler.NumberOfActionsHandler(defaultYearStatistic, responseFromDb);
+                _statisticHandler.ActiveDaysHander(defaultYearStatistic, responseFromDb);
+                _statisticHandler.MaximumSeriesHander(defaultYearStatistic, responseFromDb);
+                return defaultYearStatistic;
             }
-
-
-            resultYearStatistic = defaultYearStatistic;
-            return resultYearStatistic;
+            
+            return defaultYearStatistic;
         }
-        //private static YearStatisticDto SetUserStatisticToDefault(YearStatisticDto defaultYearStatistic, IEnumerable<StatisticEntity> responseFromDB)
-        //{
-        //    //const int OFFSET = 1;
-
-        //    DateTime answerDay;
-        //    Parallel.ForEach(responseFromDB, element =>
-        //    {
-        //        answerDay = element.AnsweredAt;
-
-        //        int dayOfWeek = (int)answerDay.DayOfWeek;
-
-        //        YearStatisticData? selectedDate = defaultYearStatistic
-        //        .Data[dayOfWeek]
-        //        .Where(x => x.Date.DayOfYear == answerDay.DayOfYear)
-        //        .FirstOrDefault();
-
-        //        if (selectedDate != null)
-        //        {
-        //            YearStatisticData day = selectedDate;
-        //            day.Value++;
-        //        }
-        //    });
-
-        //    return defaultYearStatistic;
-        //}
-
+        
         /// <summary>
         /// Сервис для сохранения статистики по модулю.
         /// </summary>
@@ -143,32 +124,6 @@ namespace StatisticService.BLL.Services
 
         // Private methods
         #region
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="defaultYearStatistic"></param>
-        /// <param name="responseFromDB"></param>
-        /// <returns></returns>
-        private static YearStatisticDto SetUserStatisticToDefault(YearStatisticDto defaultYearStatistic, IEnumerable<StatisticEntity> responseFromDB)
-        {
-            foreach (var element in responseFromDB)
-            {
-                DateTime answerDay = element.AnsweredAt;
-                int dayOfWeek = (int)answerDay.DayOfWeek;
-
-                YearStatisticData? selectedDate = defaultYearStatistic
-                    .Data[dayOfWeek]
-                    .FirstOrDefault(x => x.Date.DayOfYear == answerDay.DayOfYear);
-
-                if (selectedDate != null)
-                {
-                    selectedDate.Value++;
-                }
-            }
-
-            return defaultYearStatistic;
-        }
 
         /// <summary>
         /// Вспомогательный метод по подсчету процента правильных ответов

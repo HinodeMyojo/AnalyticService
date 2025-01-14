@@ -1,5 +1,6 @@
 ﻿using StatisticService.BLL.Abstractions.Repository;
 using StatisticService.BLL.Abstractions.Service;
+using StatisticService.BLL.Handlers;
 using StatisticService.BLL.Services;
 using StatisticService.DAL.Repository;
 using StatisticService.DAL;
@@ -17,6 +18,8 @@ namespace StatisticService.API
 
             services.AddTransient<IDefaultYearStatisticRepository, DefaultYearStatisticRepository>();
             services.AddTransient<IDefaultYearStatisticService, DefaultYearStatisticService>();
+
+            services.AddTransient<IStatisticHandler, StatisticHandler>(); 
 
             return services;
         }
