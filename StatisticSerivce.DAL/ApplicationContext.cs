@@ -29,8 +29,14 @@ namespace StatisticService.DAL
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
-
+            string? connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+            if (connectionString == null)
+            {
+                var message = "CONNECTION_STRING не найдена в переменных окружения.";
+                throw new Exception(message);
+            }
+            Console.WriteLine(connectionString);
+            optionsBuilder.UseNpgsql(connectionString);
         }
     }
 }

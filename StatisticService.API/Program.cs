@@ -11,7 +11,11 @@ builder.Services.AddGrpc( options =>
     options.Interceptors.Add<ExceptionInterceptor>();
 });
 
-// ��� ����������� ��������
+if (Environment.GetEnvironmentVariable("CONNECTION_STRING") == null || Environment.GetEnvironmentVariable("CONNECTION_STRING") == "")
+{
+    DotNetEnv.Env.Load();
+}
+
 builder.Services.RegisterService();
 
 var app = builder.Build();
