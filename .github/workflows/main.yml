@@ -38,6 +38,8 @@ jobs:
             
       - name: Деплой сервера
         uses: appleboy/ssh-action@v0.1.6
+        env:
+          CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
