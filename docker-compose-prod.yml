@@ -3,7 +3,7 @@ version: '3.9'
 services:
   statisticservice.api:
     environment:
-      CONNECTION_STRING: "Host=172.17.0.1;Port=5432;User Id=postgres;Password=admin;Database=cards_statistic_tb;"
+      CONNECTION_STRING: "${CONNECTION_STRING}"
     container_name: statistic-service
     build:
       context: .
