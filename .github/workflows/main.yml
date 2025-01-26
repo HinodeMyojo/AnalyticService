@@ -31,10 +31,24 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            sudo rm -rf  /var/www/analyticService/*
-            sudo rm -rf  /var/www/analyticService/.*
+            # Проверяем, существует ли директория
+            if [ -d "/var/www/analyticService" ]; then
+              echo "Директория существует, очищаем её..."
+              sudo rm -rf /var/www/analyticService/*
+              sudo rm -rf /var/www/analyticService/.*
+            else
+              echo "Директория не существует, создаём её..."
+              sudo mkdir -p /var/www/analyticService
+              sudo chown -R ${{ secrets.SSH_USERNAME }}:${{ secrets.SSH_USERNAME }} /var/www/analyticService
+            fi
+      
             cd /var/www/analyticService
-            git clone https://github.com/HinodeMyojo/AnalyticService.git
+            git clone https://github.com/HinodeMyojo/AnalyticService.git . || {
+              echo "Ошибка при клонировании репозитория"
+              exit 1
+            }
+      
+            echo "Репо успешно клонирован или обновлён."
             
       - name: Деплой сервера
         uses: appleboy/ssh-action@v0.1.6
